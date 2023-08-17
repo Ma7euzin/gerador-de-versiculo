@@ -1,12 +1,12 @@
-import 'dart:io' show Directory, Platform;
+import 'dart:io' show Platform;
 import 'dart:math';
-import 'dart:typed_data';
+
 
 import 'package:flutter/material.dart';
 import 'package:geradorversiculos/versiculos.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
-import 'package:path_provider/path_provider.dart';
+
 import 'package:screenshot/screenshot.dart';
 
 
@@ -45,7 +45,7 @@ class _VersiculosState extends State<Versiculos> {
     setVersiculo();
     super.initState();
     String bannerId = Platform.isAndroid
-        ? "ca-app-pub-2028996810271423/2144469885"
+        ? "ca-app-pub-2028996810271423/3176065003"
         : "ca-app-pub-3940256099942544/2934735716";
 
     adRequest = const AdRequest(
@@ -101,7 +101,7 @@ class _VersiculosState extends State<Versiculos> {
         Scaffold(
           backgroundColor: Colors.transparent, // <-- SCAFFOLD WITH TRANSPARENT BG
           appBar: AppBar(
-            actions: [
+            /*actions: [
               IconButton(onPressed: ()async {
                 /*_shareScreenshot(
                   context: context,
@@ -119,24 +119,15 @@ class _VersiculosState extends State<Versiculos> {
                 }*/
                 
               }, icon: const Icon(Icons.share))
-            ],
+            ],*/
             elevation: 3.0,
           backgroundColor: Colors.grey.shade900,
           //PROPAGANDA admob
-          title: isLoaded ? 
-          SizedBox(
-                  height: 62,
-                  width: 350,
-                  child: AdWidget(
-                    ad: bannerAd!,
-                  ),
-                )
-              :
-           Text(
+          title: Text(
             "Gerador de Versículos",
             textAlign: TextAlign.center,
             style: TextStyle(
-              fontSize: 28,
+              fontSize: 30,
               fontWeight: FontWeight.bold,
               color: Colors.grey.shade100,
             ),
@@ -185,10 +176,19 @@ class _VersiculosState extends State<Versiculos> {
                 setVersiculo();
               },
       ),
+      floatingActionButton: isLoaded ? SizedBox(
+                  height: 80,
+                  width: 385,
+                  child: AdWidget(
+                    ad: bannerAd!,
+                  ),
+                )
+              : SizedBox(),
         ),
       ],
       
-    )
+    ),
+    
     
     );
 
