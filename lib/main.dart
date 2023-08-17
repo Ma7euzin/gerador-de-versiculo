@@ -1,7 +1,6 @@
 
 import 'package:flutter/material.dart';
 import 'package:geradorversiculos/home_page.dart';
-import 'package:geradorversiculos/splash_screen/splash_screen.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 
 
@@ -26,7 +25,7 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     return const MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: SplashScreen(),
+      home: Versiculos(),
     );
 
   }

@@ -1,11 +1,15 @@
-import 'dart:io' show Platform;
+import 'dart:io' show Directory, Platform;
 import 'dart:math';
+import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:geradorversiculos/versiculos.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
-import 'package:share_plus/share_plus.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:screenshot/screenshot.dart';
+
+
 
 class Versiculos extends StatefulWidget {
   const Versiculos({Key? key,}) : super(key: key);
@@ -15,15 +19,18 @@ class Versiculos extends StatefulWidget {
 }
 
 class _VersiculosState extends State<Versiculos> {
+
+  final controller = ScreenshotController();
     
     AdRequest? adRequest;
     BannerAd? bannerAd;
     bool isLoaded = false;
 
+    
     var versiculo = "";
     var titulo = "";
     
-
+    
     
     setVersiculo(){
       var randomNumber = Random().nextInt(versiculos.length);
@@ -73,12 +80,6 @@ class _VersiculosState extends State<Versiculos> {
     super.dispose();
   }
 
-  compartilharVersiculo(){
-    final versi = versiculo;
-    final tit = titulo; 
-
-    
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -92,36 +93,58 @@ class _VersiculosState extends State<Versiculos> {
         Container(
           decoration: const BoxDecoration(
             image: DecorationImage(
-              image: AssetImage("assets/fundo.png"), // <-- BACKGROUND IMAGE
+              image: AssetImage("assets/fundo3.png"), // <-- BACKGROUND IMAGE
               fit: BoxFit.cover,
             ),
           ),
         ),
-        GestureDetector(
-          child: Scaffold(
-            backgroundColor: Colors.transparent, // <-- SCAFFOLD WITH TRANSPARENT BG
-            appBar: AppBar(
-              actions: [
-                IconButton(onPressed: ()async {
-                  if(versiculo.isNotEmpty ||  titulo.isNotEmpty){
-                    await Share.share("versiculo: ${versiculo} :${titulo}");
-                  }
+        Scaffold(
+          backgroundColor: Colors.transparent, // <-- SCAFFOLD WITH TRANSPARENT BG
+          appBar: AppBar(
+            actions: [
+              IconButton(onPressed: ()async {
+                /*_shareScreenshot(
+                  context: context,
+                  shareWidget:  
                   
-                }, icon: const Icon(Icons.share))
-              ],
-              elevation: 3.0,
-            backgroundColor: Colors.grey.shade900,
-            title: Text(
-              "Gerador de Versículos",
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                fontSize: 28,
-                fontWeight: FontWeight.bold,
-                color: Colors.grey.shade100,
-              ),
-            ), // <-- ELEVATION ZEROED
+                  Container(
+                    width: double.infinity,
+                    height: double.infinity,
+
+                  ));*/
+
+                /*
+                if(versiculo.isNotEmpty ||  titulo.isNotEmpty){
+                  await Share.share("versiculo: ${versiculo} :${titulo}");
+                }*/
+                
+              }, icon: const Icon(Icons.share))
+            ],
+            elevation: 3.0,
+          backgroundColor: Colors.grey.shade900,
+          //PROPAGANDA admob
+          title: isLoaded ? 
+          SizedBox(
+                  height: 62,
+                  width: 350,
+                  child: AdWidget(
+                    ad: bannerAd!,
+                  ),
+                )
+              :
+           Text(
+            "Gerador de Versículos",
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              fontSize: 28,
+              fontWeight: FontWeight.bold,
+              color: Colors.grey.shade100,
             ),
-            body: GestureDetector(
+          ), // <-- ELEVATION ZEROED
+          ),
+          body: GestureDetector(
+        child: Padding(
+              padding: const EdgeInsets.fromLTRB(8.0,45.0,8.0,8.0),
               child: Container(
                 child: SingleChildScrollView(
                  child: SafeArea(
@@ -133,16 +156,16 @@ class _VersiculosState extends State<Versiculos> {
                       children: [
                         Text(
                           versiculo,
-                          style: GoogleFonts.roboto(
+                          style: GoogleFonts.oswald(
                             color: Colors.grey.shade900,
                             fontSize: 35,
                           ),
                         ),
-                        const SizedBox(height: 20),
+                        const SizedBox(height: 10),
                         Text(
                           titulo,
                           style: GoogleFonts.openSans(
-                            color: Colors.black87,
+                            color: Colors.black,
                             fontWeight: FontWeight.bold,
                             fontSize: 25,
                           ),
@@ -151,59 +174,18 @@ class _VersiculosState extends State<Versiculos> {
                     ),
                   ), 
                 ),
-              ),
-              ),
-              onTap: (){
-                setVersiculo();
-              },
-            ),
-            
-            /*bottomNavigationBar: BottomAppBar(
-            shape: const CircularNotchedRectangle(),
-            elevation: 0,
-            color: Colors.transparent,
-            child: Padding(
-              padding: const EdgeInsets.all(10.0),
-              child: SizedBox(
-                height: 80,
-                child: Column(
-                  children: [
-                    Center(
-                      child: TextButton(
-                        child: Image.asset(
-                          'assets/shuffle.png',
-                          width: 80,
-                          height: 60,
-                          fit: BoxFit.contain,
-                        ),
-                        onPressed: setVersiculo,
-                      ),
-                    ),
-                  ],
-                  
                 ),
-                
+                /*onTap: (){
+                  setVersiculo();
+                },*/
+                height: double.infinity,
               ),
-              
-              
-            ),
-            
-          ),*/
-          floatingActionButton: isLoaded
-                ? SizedBox(
-                    height: 62,
-                    width: 350,
-                    child: AdWidget(
-                      ad: bannerAd!,
-                    ),
-                  )
-                : const SizedBox(),
             ),
             onTap: (){
                 setVersiculo();
               },
+      ),
         ),
-          
       ],
       
     )
@@ -211,4 +193,32 @@ class _VersiculosState extends State<Versiculos> {
     );
 
   }
+
+ /* Future<void> _shareScreenshot({
+    required BuildContext context,
+    required Widget shareWidget
+
+    }) async {
+
+      final box = context.findRenderObject() as RenderBox?;
+
+      ScreenshotController()
+      .captureFromWidget(shareWidget)
+      .then((Uint8List bytes) async{
+        final Directory dir = await getApplicationSupportDirectory();
+        final String ts = DateTime.now().millisecondsSinceEpoch.toString();
+
+        final String filePath = '${dir.path}/$ts.png';
+        XFile.fromData(bytes).saveTo(filePath);
+
+        await Share.shareXFiles(
+          [XFile(filePath)],
+          sharePositionOrigin: box!.localToGlobal(Offset.zero) & box.size,
+        );
+
+
+      });
+
+    }*/
+  
 }
